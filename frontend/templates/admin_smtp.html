@@ -1,0 +1,191 @@
+{% extends "admin.html" %}
+
+{% block admin_content %}
+    <h2>SMTP Configuration</h2>
+    
+    <div class="smtp-form">
+        <form id="smtp-config-form">
+            <div class="form-group">
+                <label for="smtp-host">SMTP Host:</label>
+                <input type="text" id="smtp-host" name="host" value="{{ config.host }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp-port">SMTP Port:</label>
+                <input type="number" id="smtp-port" name="port" value="{{ config.port }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp-username">Username:</label>
+                <input type="text" id="smtp-username" name="username" value="{{ config.username }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp-password">Password:</label>
+                <input type="password" id="smtp-password" name="password" value="{{ config.password }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="smtp-from">From Email:</label>
+                <input type="email" id="smtp-from" name="from_email" value="{{ config.from_email }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="use_tls" {% if config.use_tls %}checked{% endif %}>
+                    Use TLS
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit">Save Configuration</button>
+                <button type="button" onclick="testSmtpConnection()">Test Connection</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="connection-status">
+        {% if connection_status %}
+            <div class="status-message {{ 'success' if connection_status.success else 'error' }}">
+                {{ connection_status.message }}
+            </div>
+        {% endif %}
+    </div>
+    
+    <style>
+        .smtp-form {
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.25rem;
+        }
+        
+        .form-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .connection-status {
+            margin-top: 1rem;
+        }
+        
+        .status-message {
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .status-message.success {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: lime;
+        }
+        
+        .status-message.error {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: red;
+        }
+    </style>
+    
+    <script>
+        document.getElementById('smtp-config-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('button[type="submit"]');
+            const testButton = this.querySelector('button[type="button"]');
+            
+            // Disable both buttons during submission
+            submitButton.disabled = true;
+            testButton.disabled = true;
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/admin/smtp/save', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // On success, keep buttons disabled and update UI
+                    submitButton.classList.add('success');
+                    const statusDiv = document.querySelector('.connection-status');
+                    statusDiv.innerHTML = '<div class="status-message success">SMTP settings saved successfully</div>';
+                    
+                    // Disable all form inputs
+                    this.querySelectorAll('input').forEach(input => {
+                        input.disabled = true;
+                    });
+                } else {
+                    // On error, re-enable buttons
+                    submitButton.disabled = false;
+                    testButton.disabled = false;
+                    const statusDiv = document.querySelector('.connection-status');
+                    statusDiv.innerHTML = `<div class="status-message error">${data.error || 'Failed to save SMTP settings'}</div>`;
+                }
+            } catch (error) {
+                // On error, re-enable buttons
+                submitButton.disabled = false;
+                testButton.disabled = false;
+                const statusDiv = document.querySelector('.connection-status');
+                statusDiv.innerHTML = '<div class="status-message error">Failed to save SMTP settings</div>';
+            }
+        });
+        
+        async function testSmtpConnection() {
+            const form = document.getElementById('smtp-config-form');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const testButton = form.querySelector('button[type="button"]');
+            
+            // Disable both buttons during test
+            submitButton.disabled = true;
+            testButton.disabled = true;
+            
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('/admin/smtp/test', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                const statusDiv = document.querySelector('.connection-status');
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = '<div class="status-message success">SMTP connection test successful</div>';
+                } else {
+                    statusDiv.innerHTML = `<div class="status-message error">${data.error || 'SMTP connection test failed'}</div>`;
+                }
+            } catch (error) {
+                const statusDiv = document.querySelector('.connection-status');
+                statusDiv.innerHTML = '<div class="status-message error">SMTP connection test failed</div>';
+            } finally {
+                // Always re-enable buttons after test (unless form was previously saved successfully)
+                if (!submitButton.classList.contains('success')) {
+                    submitButton.disabled = false;
+                    testButton.disabled = false;
+                }
+            }
+        }
+    </script>
+{% endblock %}

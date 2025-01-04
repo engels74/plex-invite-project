@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-3xl font-bold text-plex-orange mb-8">Initial Setup</h1>
+    
+    <div class="bg-black/20 backdrop-blur-sm rounded-xl border border-plex-orange/20 p-8">
+        <div id="message-container" class="mb-6"></div>
+        
+        <!-- Step 1: Admin Account -->
+        <div class="setup-step active" id="step-admin">
+            <h3 class="text-xl font-semibold text-plex-orange mb-6">Step 1: Create Admin Account</h3>
+            <form id="admin-form" class="space-y-6">
+                <div class="space-y-2">
+                    <label for="admin_username" class="block text-sm font-medium">Username</label>
+                    <input
+                        type="text"
+                        id="admin_username"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="admin_password" class="block text-sm font-medium">Password</label>
+                    <input
+                        type="password"
+                        id="admin_password"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                    <p class="text-sm text-gray-400">Password must be at least 8 characters long</p>
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="confirm_password" class="block text-sm font-medium">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <button
+                    type="submit"
+                    class="w-full px-4 py-2 bg-plex-orange text-black font-medium rounded-lg hover:bg-plex-orange/90 transition-colors"
+                >
+                    Create Admin Account
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Plex Configuration -->
+        <div class="setup-step hidden" id="step-plex">
+            <h3 class="text-xl font-semibold text-plex-orange mb-6">Step 2: Configure Plex Server</h3>
+            <form id="plex-form" class="space-y-6">
+                <div class="space-y-2">
+                    <label for="plex_url" class="block text-sm font-medium">Plex URL</label>
+                    <input
+                        type="url"
+                        id="plex_url"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="plex_token" class="block text-sm font-medium">Plex Token</label>
+                    <input
+                        type="text"
+                        id="plex_token"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="flex gap-4">
+                    <button
+                        type="button"
+                        id="test-plex"
+                        class="flex-1 px-4 py-2 border border-plex-orange/30 text-plex-orange rounded-lg hover:bg-plex-orange/10 transition-colors"
+                    >
+                        Test Connection
+                    </button>
+                    <button
+                        type="submit"
+                        class="flex-1 px-4 py-2 bg-plex-orange text-black font-medium rounded-lg hover:bg-plex-orange/90 transition-colors"
+                    >
+                        Save Plex Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Step 3: SMTP Configuration -->
+        <div class="setup-step hidden" id="step-smtp">
+            <h3 class="text-xl font-semibold text-plex-orange mb-6">Step 3: Configure SMTP</h3>
+            <form id="smtp-form" class="space-y-6">
+                <div class="space-y-2">
+                    <label for="smtp_host" class="block text-sm font-medium">SMTP Host</label>
+                    <input
+                        type="text"
+                        id="smtp_host"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="smtp_port" class="block text-sm font-medium">SMTP Port</label>
+                    <input
+                        type="number"
+                        id="smtp_port"
+                        min="1"
+                        max="65535"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="smtp_username" class="block text-sm font-medium">SMTP Username</label>
+                    <input
+                        type="text"
+                        id="smtp_username"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="smtp_password" class="block text-sm font-medium">SMTP Password</label>
+                    <input
+                        type="password"
+                        id="smtp_password"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="from_email" class="block text-sm font-medium">From Email</label>
+                    <input
+                        type="email"
+                        id="from_email"
+                        required
+                        class="w-full px-4 py-2 bg-black/30 border border-plex-orange/30 rounded-lg focus:ring-2 focus:ring-plex-orange focus:border-plex-orange outline-none transition-all"
+                    >
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        id="use_tls"
+                        class="w-4 h-4 text-plex-orange bg-black/30 border-plex-orange/30 rounded focus:ring-plex-orange"
+                    >
+                    <label for="use_tls" class="text-sm">Use TLS</label>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button
+                        type="button"
+                        id="test-smtp"
+                        class="flex-1 px-4 py-2 border border-plex-orange/30 text-plex-orange rounded-lg hover:bg-plex-orange/10 transition-colors"
+                    >
+                        Test SMTP
+                    </button>
+                    <button
+                        type="submit"
+                        class="flex-1 px-4 py-2 bg-plex-orange text-black font-medium rounded-lg hover:bg-plex-orange/90 transition-colors"
+                    >
+                        Save SMTP Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between mt-8">
+            <button
+                id="prev-step"
+                disabled
+                class="px-4 py-2 border border-plex-orange/30 text-plex-orange rounded-lg hover:bg-plex-orange/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Previous
+            </button>
+            <button
+                id="next-step"
+                class="px-4 py-2 bg-plex-orange text-black font-medium rounded-lg hover:bg-plex-orange/90 transition-colors"
+            >
+                Next
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="{{ url_for('static', filename='assets/js/pages/setup/main.js') }}"></script>
+{% endblock %}

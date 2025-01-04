@@ -1,0 +1,94 @@
+{% extends "admin.html" %}
+
+{% block admin_content %}
+    <h2>User Management</h2>
+    
+    <div class="user-actions">
+        <button onclick="syncUsers()">Sync Users from Plex</button>
+    </div>
+    
+    <div class="users-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Access Key</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email or 'N/A' }}</td>
+                        <td>{{ user.access_key or 'None' }}</td>
+                        <td>{{ user.joined_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ 'Active' if user.is_active else 'Inactive' }}</td>
+                        <td>
+                            {% if user.access_key %}
+                                <button onclick="removeAccessKey('{{ user.plex_id }}')">Remove Key</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <style>
+        .user-actions {
+            margin-bottom: 2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        button {
+            background-color: var(--plex-orange);
+            color: var(--plex-black);
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+    
+    <script>
+        function syncUsers() {
+            fetch('/admin/users/sync', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+        }
+        
+        function removeAccessKey(userId) {
+            if (confirm('Are you sure you want to remove this access key?')) {
+                fetch(`/admin/users/${userId}/remove-key`, {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

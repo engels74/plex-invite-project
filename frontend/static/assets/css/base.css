@@ -1,0 +1,10 @@
+@import './utilities/variables.css';
+@import './components/messages.css';
+@import './pages/setup.css';
+
+/* Utility classes for components */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}

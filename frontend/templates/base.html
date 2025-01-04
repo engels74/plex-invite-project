@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plex Invitation System{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'plex-orange': '#e5a00d',
+                        'plex-black': '#1a1a1a'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/messages.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-plex-black text-gray-100 min-h-screen">
+    <header class="bg-black/50 backdrop-blur-sm border-b border-plex-orange/20">
+        <nav class="container mx-auto px-4 py-6 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-plex-orange hover:text-plex-orange/80 transition-colors">
+                Plex Invitation System
+            </a>
+            <div class="space-x-4">
+                <a href="/admin" class="hover:text-plex-orange transition-colors">Admin</a>
+                <a href="/setup" class="hover:text-plex-orange transition-colors">Setup</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-auto py-6 text-center text-gray-400 border-t border-plex-orange/20">
+        <div class="container mx-auto px-4">
+            &copy; 2025 Plex Invitation System
+        </div>
+    </footer>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

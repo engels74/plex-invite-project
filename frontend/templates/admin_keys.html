@@ -1,0 +1,89 @@
+{% extends "admin.html" %}
+
+{% block admin_content %}
+    <h2>Access Keys Management</h2>
+    
+    <div class="form-actions">
+        <button onclick="showCreateKeyForm()">Create New Key</button>
+    </div>
+    
+    <div id="create-key-form" class="admin-form u-hidden">
+        <h3>Create New Access Key</h3>
+        <form id="create-key-form">
+            <div class="form-group">
+                <label for="valid-days">Valid for (days):</label>
+                <input type="number" id="valid-days" name="valid_days" min="1" value="30" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="max-uses">Maximum Uses:</label>
+                <input type="number" id="max-uses" name="max_uses" min="1" value="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Libraries to Share:</label>
+                <div class="checkbox-grid">
+                    {% for library in libraries %}
+                        <label>
+                            <input type="checkbox" name="libraries" value="{{ library.key }}">
+                            {{ library.title }} ({{ library.type }})
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit">Create Key</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="keys-list">
+        <h3>Existing Keys</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Created</th>
+                    <th>Expires</th>
+                    <th>Uses</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key in keys %}
+                    <tr>
+                        <td>{{ key.key }}</td>
+                        <td>{{ key.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ key.expires_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ key.uses }} / {{ key.max_uses }}</td>
+                        <td>{{ 'Active' if key.is_active else 'Inactive' }}</td>
+                        <td>
+                            <button onclick="deactivateKey('{{ key.key }}')">Deactivate</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        function showCreateKeyForm() {
+            const form = document.getElementById('create-key-form');
+            form.classList.remove('u-hidden');
+        }
+        
+        function deactivateKey(key) {
+            if (confirm('Are you sure you want to deactivate this key?')) {
+                fetch(`/admin/keys/${key}/deactivate`, {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

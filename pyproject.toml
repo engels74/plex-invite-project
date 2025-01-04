@@ -1,0 +1,19 @@
+[project]
+name = "plex_invite"
+version = "0.1.0"
+description = "Plex Invitation System"
+requires-python = ">=3.11"
+dependencies = [
+    "plexapi>=4.15.0",
+    "pydantic>=2.0.0",
+    "Flask>=3.0.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    "email-validator>=2.0.0",
+    "SQLAlchemy>=2.0.0",
+    "alembic>=1.0.0",
+    "bcrypt>=4.0.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["plex_invite"]

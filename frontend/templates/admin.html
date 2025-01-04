@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Plex Invitation System{% endblock %}
+
+{% block content %}
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <ul>
+                <li><a href="/admin/keys">Access Keys</a></li>
+                <li><a href="/admin/users">Users</a></li>
+                <li><a href="/admin/smtp">SMTP Settings</a></li>
+                <li><a href="/admin/onboarding">Onboarding Pages</a></li>
+            </ul>
+        </nav>
+        
+        <div class="admin-content">
+            {% block admin_content %}
+                <h2>Admin Dashboard</h2>
+                <p>Welcome to the Plex Invitation System admin panel.</p>
+            {% endblock %}
+        </div>
+    </div>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/admin/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/admin/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/admin/tables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/utilities/display.css') }}">
+{% endblock %}

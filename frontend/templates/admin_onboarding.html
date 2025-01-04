@@ -1,0 +1,231 @@
+{% extends "admin.html" %}
+
+{% block admin_content %}
+    <h2>Onboarding Pages Management</h2>
+    
+    <div class="onboarding-actions">
+        <button onclick="showCreateForm()">Create New Page</button>
+    </div>
+    
+    <div class="create-form" style="display: none;">
+        <h3>Create New Onboarding Page</h3>
+        <form id="onboarding-form">
+            <div class="form-group">
+                <label for="page-title">Page Title:</label>
+                <input type="text" id="page-title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="page-content">Content (Markdown):</label>
+                <textarea id="page-content" name="content" rows="10" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmation-type">Confirmation Type:</label>
+                <select id="confirmation-type" name="confirmation_type">
+                    <option value="none">None</option>
+                    <option value="checkbox">Checkbox</option>
+                    <option value="timer">Timer (seconds)</option>
+                </select>
+            </div>
+            
+            <div class="form-group confirmation-settings" style="display: none;">
+                <div id="checkbox-settings">
+                    <label for="checkbox-text">Checkbox Text:</label>
+                    <input type="text" id="checkbox-text" name="checkbox_text">
+                </div>
+                
+                <div id="timer-settings">
+                    <label for="timer-duration">Timer Duration (seconds):</label>
+                    <input type="number" id="timer-duration" name="timer_duration" min="1">
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit">Save Page</button>
+                <button type="button" onclick="previewPage()">Preview</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="pages-list">
+        <h3>Existing Pages</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Confirmation</th>
+                    <th>Order</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                    <tr>
+                        <td>{{ page.title }}</td>
+                        <td>{{ page.confirmation_type|title }}</td>
+                        <td>
+                            <button onclick="movePageUp('{{ page.id }}')">↑</button>
+                            <button onclick="movePageDown('{{ page.id }}')">↓</button>
+                        </td>
+                        <td>
+                            <button onclick="editPage('{{ page.id }}')">Edit</button>
+                            <button onclick="deletePage('{{ page.id }}')">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="preview-modal" style="display: none;">
+        <div class="preview-content">
+            <h3>Page Preview</h3>
+            <div class="markdown-content"></div>
+            <button onclick="closePreview()">Close</button>
+        </div>
+    </div>
+    
+    <style>
+        .onboarding-actions {
+            margin-bottom: 2rem;
+        }
+        
+        .create-form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.25rem;
+        }
+        
+        .form-group textarea {
+            min-height: 200px;
+        }
+        
+        .confirmation-settings {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .form-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-content {
+            background-color: var(--plex-black);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+    
+    <script>
+        function showCreateForm() {
+            document.querySelector('.create-form').style.display = 'block';
+        }
+        
+        document.getElementById('confirmation-type').addEventListener('change', function() {
+            const settings = document.querySelector('.confirmation-settings');
+            const checkboxSettings = document.getElementById('checkbox-settings');
+            const timerSettings = document.getElementById('timer-settings');
+            
+            if (this.value === 'none') {
+                settings.style.display = 'none';
+            } else {
+                settings.style.display = 'block';
+                checkboxSettings.style.display = this.value === 'checkbox' ? 'block' : 'none';
+                timerSettings.style.display = this.value === 'timer' ? 'block' : 'none';
+            }
+        });
+        
+        function previewPage() {
+            const formData = new FormData(document.getElementById('onboarding-form'));
+            const content = formData.get('content');
+            
+            fetch('/admin/onboarding/preview', {
+                method: 'POST',
+                body: JSON.stringify({ content }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.text())
+              .then(html => {
+                  document.querySelector('.preview-modal .markdown-content').innerHTML = html;
+                  document.querySelector('.preview-modal').style.display = 'flex';
+              });
+        }
+        
+        function closePreview() {
+            document.querySelector('.preview-modal').style.display = 'none';
+        }
+        
+        function editPage(pageId) {
+            // Implementation for editing existing page
+        }
+        
+        function deletePage(pageId) {
+            if (confirm('Are you sure you want to delete this page?')) {
+                fetch(`/admin/onboarding/${pageId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+        
+        function movePageUp(pageId) {
+            // Implementation for moving page up in order
+        }
+        
+        function movePageDown(pageId) {
+            // Implementation for moving page down in order
+        }
+    </script>
+{% endblock %}

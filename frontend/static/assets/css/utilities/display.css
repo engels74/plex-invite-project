@@ -1,0 +1,59 @@
+/* Display Utility Classes */
+.u-hidden {
+    display: none !important;
+}
+
+.u-visible {
+    display: block !important;
+}
+
+.u-flex {
+    display: flex !important;
+}
+
+.u-grid {
+    display: grid !important;
+}
+
+/* Visibility Classes */
+.u-invisible {
+    visibility: hidden !important;
+}
+
+.u-visible {
+    visibility: visible !important;
+}
+
+/* Display Variations */
+.u-inline {
+    display: inline !important;
+}
+
+.u-inline-block {
+    display: inline-block !important;
+}
+
+.u-inline-flex {
+    display: inline-flex !important;
+}
+
+/* Responsive Display Classes */
+@media (max-width: 768px) {
+    .u-hidden-mobile {
+        display: none !important;
+    }
+
+    .u-visible-mobile {
+        display: block !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .u-hidden-desktop {
+        display: none !important;
+    }
+
+    .u-visible-desktop {
+        display: block !important;
+    }
+}

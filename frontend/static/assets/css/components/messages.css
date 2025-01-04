@@ -1,0 +1,93 @@
+/* Message Container */
+#message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Success Message */
+#message-container .success-message {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: rgb(74 222 128);
+    background-color: rgb(74 222 128 / 0.1);
+    border: 1px solid rgb(74 222 128 / 0.2);
+    border-radius: 0.375rem;
+}
+
+#message-container .success-message .success-icon {
+    flex-shrink: 0;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+    color: rgb(74 222 128);
+}
+
+#message-container .success-message span {
+    color: rgb(74 222 128);
+    font-weight: 500;
+}
+
+/* Error Message */
+#message-container .error-message {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: rgb(220 38 38);
+    background-color: rgb(254 242 242);
+    border: 1px solid rgb(254 202 202);
+    border-radius: 0.375rem;
+}
+
+#message-container .error-message .error-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+    color: rgb(220 38 38);
+}
+
+#message-container .error-message span {
+    color: rgb(220 38 38);
+    font-weight: 500;
+}
+
+/* Info Message */
+#message-container .info-message {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: rgb(30 64 175);
+    background-color: rgb(239 246 255);
+    border: 1px solid rgb(191 219 254);
+    border-radius: 0.375rem;
+}
+
+#message-container .info-message .info-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+    color: rgb(37 99 235);
+}
+
+#message-container .info-message span {
+    color: rgb(30 64 175);
+    font-weight: 500;
+}
+
+/* Animation */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+}

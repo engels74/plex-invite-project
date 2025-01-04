@@ -1,0 +1,36 @@
+.admin-container {
+    display: flex;
+    gap: 2rem;
+}
+
+.admin-nav {
+    width: 200px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.admin-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.admin-nav a {
+    color: var(--plex-white);
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.admin-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-content {
+    flex: 1;
+}

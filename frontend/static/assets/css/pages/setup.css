@@ -1,0 +1,14 @@
+/* Setup Wizard Styles */
+.setup-step {
+    display: none;
+}
+
+.setup-step.active {
+    display: block;
+}
+
+.setup-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}

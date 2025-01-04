@@ -1,0 +1,17 @@
+:root {
+    --error-bg: #f8d7da;
+    --error-border: #f5c6cb;
+    --error-text: #721c24;
+    
+    --success-bg: #d4edda;
+    --success-border: #c3e6cb;
+    --success-text: #155724;
+    
+    --info-bg: #d1ecf1;
+    --info-border: #bee5eb;
+    --info-text: #0c5460;
+    
+    --message-padding: 0.75rem 1rem;
+    --message-margin: 0.5rem 0;
+    --message-radius: 4px;
+}
